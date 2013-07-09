@@ -1,0 +1,105 @@
+﻿<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>.placeHolder</title>
+	<style type="text/css">
+		body{
+			text-align: center;
+		}
+		.d-iframe{
+			border: 5px solid #ccc;
+			border-radius: 5px;
+			display: inline-block;
+			*display: inline;
+			*zoom:1;
+			margin: 0 5px;
+			width: 40%;
+
+		}
+	</style>
+
+	<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="../../%23dances%23/dances_pre1.0.js"></script>
+	<script type="text/javascript" src="dances.placeHolder.js"></script>
+
+</head>
+<body>
+	<input id="X" type="text" value="555">
+	<input id="demoX" type="text">
+	<br>
+	<br>
+	<script type="text/javascript">
+		$("#demoX").bind("keydown", function(e){
+			$log(e.keyCode)
+			$log(e.shiftKey)
+		});
+	</script>
+	<div class="d-iframe">
+		<h1 class="d-iframe-hdr">全局模式</h1>
+		<iframe id="test_g" src="test/iframe-TestGloabl.html" scrolling="no" frameborder="0"></iframe>
+	</div>
+	<div class="d-iframe">
+		<h1 class="d-iframe-hdr">实例模式</h1>
+		<iframe id="text_i" src="test/iframe-TestPart.html" scrolling="no" frameborder="0"></iframe>
+	</div>
+
+	<script type="text/javascript">
+		framesAllReady = (function(){
+			var framesAllReady,
+				arrLoad = []
+			;
+
+			framesAllReady = function(fn){
+				foo();
+				function foo(){
+					var f = arguments.callee,
+						iframe = document.getElementsByTagName("iframe")
+					;
+
+					if(arrLoad.length === iframe.length){
+						fn();
+					}else{
+						setTimeout(function(){
+							f();
+						}, 50);
+					}
+				}
+			};
+
+			framesAllReady.ready = function(arg){
+				arrLoad.push(arg);
+			};
+
+			return framesAllReady;
+		})();
+
+		framesAllReady(function(){
+			dances.placeHolder.init();
+
+			// 全局调用
+			dances.placeHolder(true,{
+					rootEl: document.getElementById("test_g").contentWindow.document
+				}).on()
+			;
+
+			dances.placeHolder(".d-in",{
+					b5    : false,
+					rootEl: document.getElementById("text_i").contentWindow.document,
+
+					fInHolder: function(el){
+						$(el).css("border-color","red");
+					},
+
+					fOuterHolder: function(el){
+						$log(el)
+						$(el).css("border-color","blue");
+					}
+
+				})
+			;
+
+		});
+	</script>
+</body>
+</html>
